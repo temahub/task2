@@ -4,11 +4,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TransformUtil {
 
-    public static String readLine(String fileName, int lineNumber) {
+    public static String readLineFromTextFile(String fileName, int lineNumber) {
         String result = "";
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
@@ -26,34 +27,12 @@ public class TransformUtil {
         return result;
     }
 
-    public static String readLine(String fileName) {
-        String result = "";
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
-            result = bufferedReader.readLine();
-        }catch (FileNotFoundException e){
-            System.err.println(String.format("File %s is missing."));
-        }catch (IOException e){
-            System.err.println(String.format("Line is missing."));
-        }
-
-        return result;
+    public static String readLineFromTextFile(String fileName) {
+        return readLineFromTextFile(fileName, 1);
     }
 
-    public static List<String> transformLineToListUnique(String fileName, int lineNumber){
-        String line = readLine(fileName, lineNumber);
-
-        List<String> lLine = new ArrayList<>();
-        Stream.of(line.split("[^A-Za-zА-Яа-я]+"))
-                .map(String::toLowerCase)
-                .distinct().sorted()
-                .forEach(lLine::add);
-
-        return lLine;
-    }
-
-    public static List<String> transformLineToListNotUnique(String fileName, int lineNumber){
-        String line = readLine(fileName, lineNumber);
+    public static List<String> transformLineToArrayList(String fileName, int lineNumber){
+        String line = readLineFromTextFile(fileName, lineNumber);
 
         List<String> lLine = new ArrayList<>();
         Stream.of(line.split("[^A-Za-zА-Яа-я]+"))
@@ -61,5 +40,13 @@ public class TransformUtil {
                 .forEach(lLine::add);
 
         return lLine;
+    }
+
+    public static List<String> transformLineToArrayListUnique(String fileName, int lineNumber){
+
+        return transformLineToArrayList(fileName, lineNumber)
+                .stream()
+                .distinct()
+                .collect(Collectors.toList());
     }
 }
