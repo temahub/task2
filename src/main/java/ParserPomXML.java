@@ -12,12 +12,12 @@ public class ParserPomXML {
     {
         Model model;
         FileReader reader;
-        MavenXpp3Reader mavenreader = new MavenXpp3Reader();
+        MavenXpp3Reader mavenReader = new MavenXpp3Reader();
         String propertyValue = "";
         try
         {
             reader = new FileReader("pom.xml");
-            model = mavenreader.read(reader);
+            model = mavenReader.read(reader);
             MavenProject project = new MavenProject(model);
             while (project.getParent() != null)
             {

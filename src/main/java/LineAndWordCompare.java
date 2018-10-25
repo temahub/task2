@@ -2,28 +2,56 @@ import java.util.List;
 
 public class LineAndWordCompare {
 
-    static void countWordAndPunctuation(String fileName1, int iLine, String fileNameWord){
-        String sLine = TransformUtil.readLineFromTextFile(fileName1, iLine);
-        String word = TransformUtil.readLineFromTextFile(fileNameWord);
-        List<String> lLine = TransformUtil.transformLineToArrayList(fileName1, iLine);
+    private String searchingWord;
+    private int amountSearchingWord;
+    private int amountPunctuation;
 
-        System.out.println(String.format("\"%s\" found %d times", word, countWordInLine(lLine, word)));
-        System.out.println(String.format("Number of punctuation marks: %d", countPunctuation(sLine)));
+    public LineAndWordCompare(String fileName1, int iLine, String fileNameWord){
+        searchingWord = TransformUtil.readLineFromTextFile(fileNameWord);
+        amountSearchingWord = countWordInLine(TransformUtil
+                .transformLineToArrayList(fileName1, iLine) , searchingWord);
+        amountPunctuation = countPunctuation(TransformUtil.readLineFromTextFile(fileName1, iLine));
     }
 
-    private static int countWordInLine(List<String> line, String word){
-        int count = 0;
+    public LineAndWordCompare(String fileName, String objectName, String arrayName,
+                              String stringName, String fileNameWord){
+        searchingWord = TransformUtil.readLineFromTextFile(fileNameWord);
+        amountSearchingWord = countWordInLine(TransformUtil.
+                transformLineToArrayList(fileName, objectName, arrayName, stringName), searchingWord);
+        amountPunctuation = countPunctuation(TransformUtil.
+                readLineFromJSONFile(fileName, objectName, arrayName, stringName));
+    }
 
+    private int countWordInLine(List<String> line, String word){
+        int count = 0;
         for (String s : line) {
             if (s.equalsIgnoreCase(word)){
                 count++;
             }
         }
-
         return count;
     }
 
-    private static int countPunctuation(String line){
+    private int countPunctuation(String line){
         return line.replaceAll("\\w+", "").replaceAll(" ", "").length();
+    }
+
+    public String getSearchingWord() {
+        return searchingWord;
+    }
+
+    public int getAmountSearchingWord() {
+        return amountSearchingWord;
+    }
+
+    public int getAmountPunctuation() {
+        return amountPunctuation;
+    }
+
+    @Override
+    public String toString() {
+        return  "searchingWord = '" + searchingWord + '\'' +
+                " found in text " + amountSearchingWord + " times" +
+                "\nAmount punctuation in text = " + amountPunctuation;
     }
 }
